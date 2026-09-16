@@ -1,0 +1,10 @@
+{
+  "name": "icheon-story-archive",
+  "version": "1.0.0",
+  "private": true,
+  "description": "이천, 이야기로 잇다 — 기억 잇기 API (Vercel Serverless + Upstash Redis)",
+  "type": "module",
+  "dependencies": {
+    "@upstash/redis": "^1.34.0"
+  }
+}
