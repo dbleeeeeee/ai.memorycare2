@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이천, 이야기로 잇다 — AI 메모리 케어 프로젝트 · 이천 실버 라이프 아카이브</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --paper:#F1EDE4;
+  --paper-2:#E7E1D4;
+  --ink:#1C2431;
+  --ink-2:#4A5262;
+  --ink-3:#8A8F98;
+  --indigo:#274C77;
+  --indigo-2:#1B3556;
+  --jade:#8FB3A9;
+  --jade-2:#D9E6E1;
+  --stamp:#B3382E;
+  --ochre:#C9A86A;
+  --serif:'Gowun Batang', 'Noto Serif KR', serif;
+  --sans:'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif;
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--indigo);outline-offset:3px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+h1,h2,h3,.serif{font-family:var(--serif);font-weight:400;letter-spacing:-0.01em}
+h2{font-size:clamp(28px,3.4vw,42px);line-height:1.25}
+h3{font-size:22px;line-height:1.35}
+p{max-width:64ch}
+.muted{color:var(--ink-2)}
+.small{font-size:14px}
+
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(241,237,228,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(28,36,49,.08)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-family:var(--serif);font-size:18px;display:flex;align-items:center;gap:10px}
+.brand .seal{width:26px;height:26px;border:1.5px solid var(--stamp);border-radius:50%;display:grid;place-items:center;color:var(--stamp);font-size:11px;font-weight:700;font-family:var(--serif)}
+nav ul{display:flex;gap:26px;list-style:none;font-size:14.5px}
+nav a{padding:6px 0;border-bottom:1px solid transparent}
+nav a:hover{border-color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font-size:15px;font-weight:500;transition:transform .15s}
+.btn:active{transform:scale(.98)}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-line{border:1px solid var(--ink);color:var(--ink)}
+.btn-indigo{background:var(--indigo);color:#fff}
+.menu-btn{display:none;font-size:22px}
+@media(max-width:860px){nav{display:none}.menu-btn{display:block}header .btn{display:none}}
+
+/* hero: the sentence field */
+#hero{position:relative;min-height:100vh;overflow:hidden;padding-top:64px;display:grid;grid-template-columns:minmax(340px,42%) 1fr}
+.field{position:relative;overflow:hidden;min-height:calc(100vh - 64px)}
+.sent{position:absolute;font-family:var(--serif);font-size:15px;line-height:1.45;color:var(--ink);background:#fff;padding:11px 14px;border-radius:2px;box-shadow:0 1px 0 rgba(28,36,49,.12), 0 8px 24px -14px rgba(28,36,49,.35);max-width:260px;cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;will-change:transform;user-select:none;text-align:left}
+.sent::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--jade)}
+.sent[data-emo="슬픔"]::before{background:var(--indigo)}
+.sent[data-emo="기쁨"]::before{background:var(--ochre)}
+.sent[data-emo="그리움"]::before{background:var(--jade)}
+.sent[data-emo="자부심"]::before{background:var(--stamp)}
+.sent:hover,.sent:focus-visible{transform:translateY(-4px) rotate(0deg) scale(1.04)!important;box-shadow:0 1px 0 rgba(28,36,49,.12),0 20px 40px -16px rgba(28,36,49,.5);z-index:5}
+.sent .who{display:block;margin-top:6px;font-family:var(--sans);font-size:12px;color:var(--ink-3)}
+.sent .who b{font-weight:500;color:var(--ink-2)}
+.hero-copy{position:relative;z-index:2;margin:0;max-width:none;padding:14vh 24px 60px 40px;align-self:start;order:-1}
+@media(min-width:1500px){.hero-copy{padding-left:calc((100vw - 1420px)/2)}}
+@media(max-width:860px){.hero-copy{padding:6vh 28px 40px}}
+.hero-copy > *{pointer-events:auto}
+.hero-copy .kicker{font-size:14px;color:var(--indigo);margin-bottom:18px}
+.hero-copy h1{font-size:clamp(40px,5.6vw,78px);line-height:1.08;letter-spacing:-0.02em;color:var(--ink)}
+.hero-copy h1 span{display:block}
+.hero-copy .lede{font-size:18px;margin-top:22px;color:var(--ink-2);background:rgba(241,237,228,.75);display:inline-block;padding:4px 0}
+.hero-actions{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.hero-hint{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:13px;color:var(--ink-3);z-index:2}
+.hero-count{position:absolute;bottom:26px;right:28px;font-size:13px;color:var(--ink-3);z-index:2}
+.fade-r{display:none}
+@media(max-width:860px){
+  #hero{display:flex;flex-direction:column;min-height:0}
+  .field{min-height:0}
+  .hero-copy{order:1}
+  .field{order:2;position:static;display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px}
+  .sent{position:static!important;transform:none!important;animation:none!important;max-width:none!important;width:auto!important;flex:1 1 calc(50% - 5px);font-size:14px;padding:12px 14px}
+  .hero-hint{order:3;position:static;padding:10px 0 28px}
+  .hero-count{display:none}
+}
+
+/* sections */
+section{padding:96px 0}
+.sec-head{display:grid;grid-template-columns:1fr 1.4fr;gap:40px;align-items:end;margin-bottom:48px}
+.sec-head .no{font-family:var(--serif);color:var(--indigo);font-size:15px;margin-bottom:12px}
+.sec-head p{font-size:17px;color:var(--ink-2)}
+@media(max-width:860px){.sec-head{grid-template-columns:1fr;gap:16px}}
+.divider{height:1px;background:rgba(28,36,49,.1)}
+
+/* today */
+#today{background:var(--indigo-2);color:var(--paper);padding:72px 0}
+#today .card{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+#today .label{font-size:14px;color:var(--jade);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+#today .label::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--jade)}
+#today blockquote{font-family:var(--serif);font-size:clamp(24px,3vw,36px);line-height:1.4}
+#today .meta{margin-top:22px;color:rgba(241,237,228,.7);font-size:15px}
+#today .art{aspect-ratio:4/3;border-radius:4px;background:linear-gradient(160deg,#35608F,#1B3556);position:relative;overflow:hidden;display:grid;place-items:center}
+#today .art svg{width:70%;opacity:.9}
+#today .art .tag{position:absolute;left:14px;bottom:12px;font-size:12px;background:rgba(0,0,0,.35);padding:4px 10px;border-radius:999px}
+#today .btns{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap}
+#today .btn-line{border-color:rgba(241,237,228,.5);color:var(--paper)}
+#today .btn-jade{background:var(--jade);color:var(--ink)}
+@media(max-width:860px){#today .card{grid-template-columns:1fr;gap:28px}}
+
+/* archive explorer */
+.filters{display:flex;flex-wrap:wrap;gap:10px 28px;margin-bottom:28px;align-items:center}
+.fgroup{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fgroup .k{font-size:13px;color:var(--ink-3);margin-right:4px}
+.chip{padding:7px 14px;border:1px solid rgba(28,36,49,.2);border-radius:999px;font-size:14px;background:transparent;transition:.15s}
+.chip:hover{border-color:var(--ink)}
+.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.timeline{position:relative;height:56px;margin:8px 0 34px}
+.timeline .rail{position:absolute;left:0;right:0;top:26px;height:1px;background:rgba(28,36,49,.25)}
+.timeline .tick{position:absolute;top:0;transform:translateX(-50%);text-align:center;font-size:12px;color:var(--ink-3);cursor:pointer}
+.timeline .tick i{display:block;width:1px;height:10px;background:var(--ink-3);margin:6px auto 0}
+.timeline .tick b{display:block;width:10px;height:10px;border-radius:50%;background:var(--ink);margin:-5px auto 0;opacity:0;transition:.2s}
+.timeline .tick.on b{opacity:1}
+.timeline .tick.on{color:var(--ink);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.mcard{background:#fff;border-radius:3px;padding:22px 22px 18px;position:relative;cursor:pointer;border:1px solid rgba(28,36,49,.06);transition:border-color .15s;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;text-align:left}
+.mcard:hover{border-color:var(--ink)}
+.mcard q{font-family:var(--serif);font-size:17px;line-height:1.5;quotes:none}
+.mcard .foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:12.5px;color:var(--ink-3)}
+.mcard .foot b{font-weight:500;color:var(--ink-2)}
+.mcard .voice{display:inline-flex;align-items:center;gap:5px}
+.mcard .voice i{display:inline-block;width:3px;height:10px;background:var(--jade);border-radius:2px}
+.mcard .voice i:nth-child(2){height:14px}.mcard .voice i:nth-child(3){height:8px}
+.mcard .stamp{position:absolute;top:12px;right:12px;width:22px;height:22px;border:1.5px solid var(--stamp);border-radius:50%;color:var(--stamp);font-size:9px;display:none;place-items:center;font-family:var(--serif);transform:rotate(-12deg)}
+.mcard.seen .stamp{display:grid}
+.empty{padding:60px 20px;text-align:center;color:var(--ink-3);border:1px dashed rgba(28,36,49,.2);border-radius:4px}
+
+/* room modal */
+.modal{position:fixed;inset:0;z-index:100;display:none}
+.modal.open{display:block}
+.modal .bg{position:absolute;inset:0;background:rgba(28,36,49,.55);backdrop-filter:blur(3px)}
+.room{position:absolute;top:0;right:0;bottom:0;width:min(920px,100%);background:var(--paper);overflow-y:auto;box-shadow:-20px 0 60px rgba(0,0,0,.25);animation:slide .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes slide{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+.room .close{position:sticky;top:0;float:right;margin:16px;width:40px;height:40px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:18px;z-index:2;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.room-in{padding:40px 48px 80px;clear:both}
+.room .who{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.room .avatar{width:56px;height:56px;border-radius:50%;background:var(--jade-2);display:grid;place-items:center;font-family:var(--serif);font-size:20px;color:var(--indigo)}
+.room .who h3{font-size:24px}
+.room .who .sub{font-size:14px;color:var(--ink-3)}
+.room .big{font-family:var(--serif);font-size:clamp(24px,3vw,32px);line-height:1.4;margin:10px 0 30px}
+.room-cols{display:grid;grid-template-columns:1.2fr .9fr;gap:36px}
+@media(max-width:760px){.room-cols{grid-template-columns:1fr}.room-in{padding:24px 22px 60px}}
+.passage{font-family:var(--serif);font-size:17px;line-height:1.9;color:var(--ink)}
+.passage p{margin-bottom:1.1em;max-width:none}
+.passage p.playing{background:rgba(143,179,169,.25);box-shadow:0 0 0 6px rgba(143,179,169,.25);border-radius:2px}
+.player{display:flex;align-items:center;gap:14px;background:#fff;border-radius:4px;padding:14px 16px;margin-bottom:22px;border:1px solid rgba(28,36,49,.08)}
+.player .play{width:42px;height:42px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-size:14px}
+.player .bar{flex:1;height:3px;background:rgba(28,36,49,.12);border-radius:2px;position:relative;overflow:hidden}
+.player .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--jade);transition:width .3s linear}
+.player .t{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.diary{background:#fff;border-radius:4px;padding:14px;border:1px solid rgba(28,36,49,.08)}
+.diary .pic{aspect-ratio:1;border-radius:3px;background:linear-gradient(150deg,#E7E1D4,#D9E6E1);display:grid;place-items:center;margin-bottom:12px;overflow:hidden}
+.diary .pic svg{width:75%}
+.diary .cap{font-size:13px;color:var(--ink-2)}
+.diary .cap b{display:block;font-weight:600;font-size:12px;color:var(--ink-3);margin-bottom:4px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0}
+.tag{font-size:12.5px;padding:4px 10px;border-radius:999px;background:var(--paper-2);color:var(--ink-2)}
+.side-box{margin-top:20px;background:#fff;border-radius:4px;padding:18px;border:1px solid rgba(28,36,49,.08)}
+.side-box h4{font-size:14px;margin-bottom:10px}
+.side-box ul{list-style:none;font-size:14px}
+.side-box li{padding:8px 0;border-top:1px solid rgba(28,36,49,.06);cursor:pointer}
+.side-box li:first-child{border-top:0}
+.side-box li:hover{color:var(--indigo)}
+
+/* letters (reply) */
+.reply-form{background:#fff;border-radius:4px;padding:26px;border:1px solid rgba(28,36,49,.08);margin-top:40px}
+.reply-form h4{font-family:var(--serif);font-size:20px;margin-bottom:6px}
+.reply-form .modes{display:flex;gap:8px;margin:14px 0}
+.reply-form textarea,.reply-form input,.form input,.form select,.form textarea{width:100%;font:inherit;padding:12px 14px;border:1px solid rgba(28,36,49,.2);border-radius:4px;background:var(--paper);resize:vertical}
+.reply-form textarea{min-height:120px;font-family:var(--serif);font-size:16px}
+.reply-form .row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.reply-form .note{font-size:13px;color:var(--ink-3)}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:22px}
+.letter{background:#fff;padding:16px;border-radius:2px;font-family:var(--serif);font-size:14.5px;line-height:1.6;position:relative;border-top:3px solid var(--paper-2);transform:rotate(var(--r,0deg))}
+.letter .from{font-family:var(--sans);font-size:12px;color:var(--ink-3);margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:3px 8px;border-radius:999px;background:var(--paper-2);color:var(--ink-2)}
+.badge.arrived{background:var(--stamp);color:#fff}
+.badge.pending{background:#fff;border:1px solid rgba(28,36,49,.2)}
+.badge.read{background:var(--indigo);color:#fff}
+.letter.voice{border-top-color:var(--jade)}
+.letter.draw{border-top-color:var(--ochre)}
+.letter .mini{width:100%;aspect-ratio:3/2;background:var(--jade-2);border-radius:2px;margin-bottom:8px;display:grid;place-items:center;color:var(--ink-3);font-family:var(--sans);font-size:12px}
+
+/* flow strip */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(28,36,49,.12);border-radius:4px;overflow:hidden;background:#fff}
+.flow>div{padding:26px 24px;border-left:1px solid rgba(28,36,49,.1)}
+.flow>div:first-child{border-left:0}
+.flow .st{font-family:var(--serif);color:var(--indigo);font-size:14px;margin-bottom:8px}
+.flow h4{font-size:17px;margin-bottom:8px}
+.flow p{font-size:14px;color:var(--ink-2)}
+@media(max-width:860px){.flow{grid-template-columns:1fr 1fr}.flow>div:nth-child(3){border-left:0}.flow>div{border-top:1px solid rgba(28,36,49,.1)}.flow>div:nth-child(-n+2){border-top:0}}
+
+/* play section */
+.play-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:860px){.play-grid{grid-template-columns:1fr}}
+.pbox{background:#fff;border-radius:4px;padding:30px;border:1px solid rgba(28,36,49,.08)}
+.pbox h3{margin-bottom:8px}
+.pbox .desc{color:var(--ink-2);font-size:15px;margin-bottom:20px}
+.age-row{display:flex;gap:10px;align-items:center;margin-bottom:18px}
+.age-row input{width:110px;font:inherit;font-size:28px;font-family:var(--serif);padding:8px 12px;border:0;border-bottom:2px solid var(--ink);background:transparent;text-align:center}
+.age-out{display:grid;gap:10px}
+.age-item{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:12px 0;border-top:1px solid rgba(28,36,49,.08);cursor:pointer}
+.age-item .yr{font-family:var(--serif);color:var(--indigo);font-size:15px}
+.age-item q{font-family:var(--serif);font-size:15.5px;quotes:none;display:block}
+.age-item small{color:var(--ink-3);font-size:12px}
+.stamps{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:12px}
+.stampc{aspect-ratio:1;border-radius:50%;border:1.5px dashed rgba(28,36,49,.25);display:grid;place-items:center;font-family:var(--serif);font-size:13px;color:var(--ink-3);position:relative}
+.stampc.got{border:1.5px solid var(--stamp);color:var(--stamp);background:rgba(179,56,46,.06);transform:rotate(-8deg)}
+.stampc.got::after{content:"";position:absolute;inset:4px;border:1px solid var(--stamp);border-radius:50%;opacity:.5}
+.stamp-count{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
+.stamp-count b{font-family:var(--serif);font-size:32px;font-weight:400}
+.link-in{display:flex;gap:8px;margin-bottom:14px}
+.link-in input{flex:1;font:inherit;padding:12px 14px;border:1px solid rgba(28,36,49,.2);border-radius:4px;background:var(--paper)}
+.link-out{background:var(--paper);border-radius:4px;padding:18px;font-family:var(--serif);font-size:15.5px;line-height:1.7;min-height:88px}
+.lk{background:#fff;padding:14px;border-radius:2px;border-top:3px solid var(--jade);font-size:14px;line-height:1.6}
+.lk .me{font-family:var(--serif)}
+.lk .to{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(28,36,49,.15);font-family:var(--serif);color:var(--indigo);cursor:pointer}
+.lk .meta{font-family:var(--sans);font-size:12px;color:var(--ink-3);margin-top:6px}
+.link-in{flex-wrap:wrap}
+.link-out .arrow{color:var(--ink-3);font-family:var(--sans);font-size:12px;margin:10px 0 6px}
+.month{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.month>div{padding:16px;border-radius:4px;background:var(--paper)}
+.month .h{font-size:12px;color:var(--ink-3);margin-bottom:8px}
+.month .a{font-family:var(--serif);font-size:15.5px;line-height:1.6}
+.month .a+.a{margin-top:10px;padding-top:10px;border-top:1px solid rgba(28,36,49,.08)}
+.month input{width:100%;font:inherit;padding:10px;border:1px solid rgba(28,36,49,.2);border-radius:4px;background:#fff;margin-top:6px}
+@media(max-width:600px){.month{grid-template-columns:1fr}}
+
+/* about / partners */
+#about .cols{display:grid;grid-template-columns:1.1fr .9fr;gap:60px}
+#about .core{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px}
+#about .core>div{padding:24px 0;border-top:1px solid var(--ink)}
+#about .core h4{font-family:var(--serif);font-size:22px;margin-bottom:8px}
+#about .core p{font-size:14px;color:var(--ink-2)}
+#about blockquote{font-family:var(--serif);font-size:20px;line-height:1.6;padding-left:22px;border-left:2px solid var(--jade);margin:30px 0}
+#about blockquote footer{font-family:var(--sans);font-size:13px;color:var(--ink-3);margin-top:12px}
+.book{background:#fff;padding:32px;border-radius:4px;border:1px solid rgba(28,36,49,.08)}
+.book .vol{font-size:13px;color:var(--indigo);margin-bottom:8px}
+.book h3{font-size:28px;margin-bottom:6px}
+.book .names{font-family:var(--serif);font-size:16px;color:var(--ink-2);margin:12px 0 20px}
+.book p{font-size:14.5px;color:var(--ink-2);margin-bottom:12px}
+.book .pill{font-size:12px;color:var(--ink-3);border:1px solid rgba(28,36,49,.15);padding:4px 10px;border-radius:999px;display:inline-block}
+@media(max-width:860px){#about .cols{grid-template-columns:1fr;gap:36px}#about .core{grid-template-columns:1fr}}
+.partners{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.partner{padding:26px;background:#fff;border-radius:4px;border:1px solid rgba(28,36,49,.08)}
+.partner .logo{font-family:var(--serif);font-size:20px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.partner .logo span{width:34px;height:34px;border-radius:50%;background:var(--paper-2);display:grid;place-items:center;font-size:14px;color:var(--indigo)}
+.partner .role{font-size:13px;color:var(--indigo);margin-bottom:8px}
+.partner p{font-size:14px;color:var(--ink-2)}
+@media(max-width:860px){.partners{grid-template-columns:1fr}}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+.stat{padding:22px 0;border-top:1px solid var(--ink)}
+.stat b{font-family:var(--serif);font-size:38px;font-weight:400;display:block;line-height:1.1}
+.stat span{font-size:13px;color:var(--ink-2)}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}}
+.bars{margin-top:22px}
+.bar-row{display:grid;grid-template-columns:90px 1fr 40px;gap:12px;align-items:center;font-size:13px;margin-bottom:8px}
+.bar-row .b{height:10px;background:var(--paper-2);border-radius:2px;overflow:hidden}
+.bar-row .b i{display:block;height:100%;background:var(--indigo)}
+
+/* forms */
+.forms{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
+.form{background:#fff;border-radius:4px;padding:28px;border:1px solid rgba(28,36,49,.08)}
+.form h3{margin-bottom:4px}
+.form .desc{font-size:14px;color:var(--ink-2);margin-bottom:18px}
+.form label{display:block;font-size:13px;color:var(--ink-2);margin:12px 0 6px}
+.form .check{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;margin-top:12px;color:var(--ink-2)}
+.form .check input{width:auto;margin-top:4px}
+@media(max-width:860px){.forms{grid-template-columns:1fr}}
+
+/* admin */
+#admin{background:var(--ink);color:var(--paper)}
+#admin .sec-head p{color:rgba(241,237,228,.7)}
+#admin .no{color:var(--jade)}
+.admin-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px}
+.panel{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:22px}
+.panel h4{font-size:15px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.panel h4 span{font-size:12px;color:rgba(241,237,228,.6);font-weight:400}
+.qitem{display:grid;grid-template-columns:1fr auto;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.08);font-size:14px;align-items:center}
+.qitem q{font-family:var(--serif);quotes:none;display:block}
+.qitem small{color:rgba(241,237,228,.55);font-size:12px}
+.qitem .acts{display:flex;gap:6px}
+.qitem .acts button{padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid rgba(255,255,255,.25)}
+.qitem .acts button.ok{background:var(--jade);color:var(--ink);border-color:var(--jade)}
+.consent{display:grid;gap:10px;font-size:14px}
+.consent>div{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(255,255,255,.08)}
+.consent .sw{font-size:12px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.08)}
+.consent .sw.on{background:var(--jade);color:var(--ink)}
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:20px}
+.pipeline>div{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:14px;font-size:13px}
+.pipeline b{display:block;font-family:var(--serif);font-size:15px;margin-bottom:4px;font-weight:400;color:var(--jade)}
+.pipeline p{color:rgba(241,237,228,.65);font-size:12.5px}
+@media(max-width:860px){.admin-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr}}
+
+footer{padding:60px 0 40px;font-size:13.5px;color:var(--ink-2)}
+footer .wrap{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+footer .brand{margin-bottom:10px}
+
+/* sample notice */
+.notice{background:var(--ochre);color:var(--ink);font-size:13.5px;padding:10px 0;position:relative;z-index:51}
+.notice .wrap{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:999px;font-size:14px;opacity:0;transition:.3s;z-index:200;pointer-events:none;display:flex;gap:10px;align-items:center}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.toast .seal{width:22px;height:22px;border:1.5px solid var(--stamp);border-radius:50%;display:grid;place-items:center;color:var(--stamp);font-size:9px;font-family:var(--serif)}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#hero"><span class="seal">잇</span>이천, 이야기로 잇다</a>
+    <nav><ul>
+      <li><a href="#today">오늘의 기억</a></li>
+      <li><a href="#archive">기억 관람</a></li>
+      <li><a href="#reply">답장</a></li>
+      <li><a href="#play">기억 잇기</a></li>
+      <li><a href="#about">프로젝트</a></li>
+      <li><a href="#network">참여 기관</a></li>
+      <li><a href="#admin">운영</a></li>
+    </ul></nav>
+    <a class="btn btn-ink" href="#archive" style="padding:9px 16px;font-size:14px">기억 방 들어가기</a>
+    <button class="menu-btn" aria-label="메뉴">☰</button>
+  </div>
+</header>
+
+<!-- HERO: 90개의 한 문장 -->
+<section id="hero">
+  <div class="field" id="field" aria-label="어르신들의 한 문장"></div>
+  <div class="fade-r"></div>
+  <div class="wrap hero-copy">
+    <div class="kicker">AI 메모리 케어 프로젝트 · 이천 실버 라이프 아카이브</div>
+    <h1><span>기억을 품다,</span><span>이야기로 잇다,</span><span>기억을 나누다.</span></h1>
+    <p class="lede">이천에서 홀로 살아가시는 서른 분 어르신의 삶을<br>AI와 따뜻한 마음으로 기록한 기억의 방.<br>이름보다 먼저, 한 문장을 골라 들어가 보세요.</p>
+    <div class="hero-actions">
+      <button class="btn btn-ink" onclick="openRandom()">아무 문장이나 열어보기</button>
+      <a class="btn btn-line" href="#archive">연도·장소·주제로 찾기</a>
+    </div>
+  </div>
+  <div class="hero-hint">문장을 누르면 그 어르신의 기억 방으로 들어갑니다</div>
+  <div class="hero-count" id="heroCount"></div>
+</section>
+
+<!-- 오늘의 기억 -->
+<section id="today">
+  <div class="wrap card">
+    <div>
+      <div class="label">오늘의 기억 · <span id="todayDate"></span></div>
+      <blockquote id="todayQuote">…</blockquote>
+      <div class="meta" id="todayMeta"></div>
+      <div class="btns">
+        <button class="btn btn-jade" id="todayOpen">이 방으로 들어가기</button>
+        <button class="btn btn-line" onclick="pickToday(true)">다른 분 만나기</button>
+      </div>
+    </div>
+    <div class="art" aria-hidden="true">
+      <svg viewBox="0 0 200 150" fill="none" stroke="#F1EDE4" stroke-width="1.2" stroke-linecap="round">
+        <path d="M20 120 Q60 60 100 110 T180 100"/><path d="M40 118 v-40 q0 -10 10 -10 h30 q10 0 10 10 v40"/><path d="M55 118 v-22 h20 v22"/><circle cx="150" cy="45" r="14"/><path d="M15 130 h170"/><path d="M110 118 q10 -30 40 -18"/><path d="M60 60 q5 -18 20 -20 q10 -2 15 8"/>
+      </svg>
+      <span class="tag">AI 그림일기 · 실버프렌드</span>
+    </div>
+  </div>
+</section>
+
+<!-- 기억 관람 -->
+<section id="archive">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="no">기억 관람 — 아카이브</div><h2>어르신 한 분,<br>기억 방 하나.</h2></div>
+      <p>자서전 글귀, AI 그림일기, 녹취 음성, 그리고 한 문장이 한 화면에 모입니다. 연도·장소·주제·감정으로 찾아 들어가거나, 마음이 머무는 문장을 그냥 눌러 보세요.</p>
+    </div>
+
+    <div class="timeline" id="timeline"><div class="rail"></div></div>
+
+    <div class="filters">
+      <div class="fgroup" data-key="place"><span class="k">장소</span></div>
+      <div class="fgroup" data-key="topic"><span class="k">주제</span></div>
+      <div class="fgroup" data-key="emo"><span class="k">감정</span></div>
+      <button class="chip" id="clearF" style="margin-left:auto">전체 보기</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 답장 -->
+<section id="reply">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="no">답장 — 참여</div><h2>기억을 읽었다면,<br>답장을 남겨 주세요.</h2></div>
+      <p>글로, 목소리로, 그림으로. 검수를 거쳐 게시된 답장은 어르신께 출력·낭독으로 실제 전달되고, 전달되면 "답장이 도착했어요" 배지가 붙습니다.</p>
+    </div>
+
+    <div class="flow">
+      <div><div class="st">1 · 쓰기</div><h4>기억 방에서 답장</h4><p>텍스트 · 음성 녹음 · 그림 첨부. 로그인 없이 별명만으로 가능.</p></div>
+      <div><div class="st">2 · 검수</div><h4>관리자 승인</h4><p>부적절한 내용은 차단, 승인된 답장만 게시. 보통 2일 이내.</p></div>
+      <div><div class="st">3 · 전달</div><h4>출력 · 낭독</h4><p>복지관·생활지원사가 방문해 편지를 읽어 드리거나 출력본 전달.</p></div>
+      <div><div class="st">4 · 도착</div><h4>배지와 반응</h4><p>"답장이 도착했어요" 표시. 어르신의 한마디 답이 다시 벽에 붙습니다.</p></div>
+    </div>
+
+    <h3 style="margin-top:56px">답장 벽 · <span id="wallWho" class="muted" style="font-size:16px">고경자 어르신께 쌓인 편지</span></h3>
+    <div class="wall" id="wall"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 재미 요소 -->
+<section id="play">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="no">기억 잇기 — 참여의 재미</div><h2>내 이야기와<br>어르신의 기억이 만나는 자리.</h2></div>
+      <p>관람만 하고 나가지 않도록. 한 문장 남기기, 내 나이의 그 시절 찾기, 우표 모으기, 이달의 질문에 나란히 답하기.</p>
+    </div>
+    <div class="play-grid">
+      <div class="pbox" style="grid-column:1/-1">
+        <h3>기억 잇기</h3>
+        <p class="desc">내 이야기를 한 문장 남기면, 비슷한 시대·주제의 어르신 기억과 이어 드립니다. 남긴 문장은 아래 벽에 모두가 볼 수 있게 붙습니다.</p>
+        <div class="link-in"><input id="linkIn" maxlength="140" placeholder="예) 어릴 때 할머니가 해주신 김치찌개가 제일 맛있었어요" aria-label="내 이야기 한 문장"><input id="linkFrom" maxlength="20" style="flex:0 0 150px" placeholder="별명 (선택)" aria-label="별명"><button class="btn btn-ink" id="linkBtn" onclick="linkMemory()">잇기</button></div>
+        <div class="link-out" id="linkOut"><span class="muted small">한 문장을 남기면 여기에 이어진 기억이 나타납니다.</span></div>
+        <div class="small muted" id="linkStatus" style="margin-top:10px"></div>
+        <h4 style="margin:28px 0 12px;font-size:15px">이어진 이야기 벽 <span class="muted" id="linkCount" style="font-weight:400"></span></h4>
+        <div class="wall" id="linkWall"></div>
+      </div>
+      <div class="pbox">
+        <h3>시대 지도</h3>
+        <p class="desc">지금 내 나이일 때, 어르신들은 무엇을 하고 계셨을까요.</p>
+        <div class="age-row"><span class="muted">나는 지금</span><input id="ageIn" type="number" min="5" max="100" value="27" aria-label="나이"><span class="muted">살 · </span><button class="btn btn-line" style="padding:9px 16px;font-size:14px" onclick="ageMap()">그 시절 보기</button></div>
+        <div class="age-out" id="ageOut"></div>
+      </div>
+      <div class="pbox">
+        <div class="stamp-count"><h3>우표·도장 수집</h3><div><b id="stampN">0</b> <span class="muted small">/ 30</span></div></div>
+        <p class="desc">기억 방을 관람하거나 답장을 남기면 어르신별 도장이 찍힙니다. 서른 분을 모두 만나면 완성.</p>
+        <div class="stamps" id="stamps"></div>
+      </div>
+      <div class="pbox">
+        <h3>이달의 질문</h3>
+        <p class="desc">9월의 질문 · <b>"가장 맛있었던 밥은 언제였나요?"</b></p>
+        <div class="month">
+          <div><div class="h">어르신들의 답</div><div id="monthElders"></div></div>
+          <div><div class="h">관람자들의 답</div><div id="monthVisitors"></div><input id="monthIn" placeholder="나의 답을 남기기 (Enter)" aria-label="이달의 질문 답"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 프로젝트 소개 -->
+<section id="about" style="background:#fff">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="no">프로젝트</div><h2>한 사람의 인생은<br>그 자체로 하나의 역사입니다.</h2></div>
+      <p>AI 기술과 따뜻한 인간의 마음이 만나 이웃 어르신들의 소중한 기억을 기록하고, 지역 공동체의 자산으로 보전하는 프로젝트입니다.</p>
+    </div>
+    <div class="cols">
+      <div>
+        <p style="font-size:17px;line-height:1.75">6.25 전쟁의 상흔을 견뎌내고, 가난과 고난 속에서도 굴복하지 않았던 어르신들의 이야기는 단순한 개인사를 넘어 우리 모두가 공유해야 할 소중한 기억입니다. 이천 지역에서 홀로 살아가시는 서른 분 어르신들의 삶의 궤적을 AI 기술과 따뜻한 마음으로 기록한 『이야기로 잇다』는 젊은 세대에게는 삶의 지혜와 용기를 전하는 교과서가 되고, 같은 세대 어르신들께는 공감과 위로가 되며, 우리 사회 전체에는 세대를 잇는 소통의 다리가 될 것입니다.</p>
+        <blockquote>"이야기는 사람과 사람을, 과거와 현재를, 그리고 현재와 미래를 잇는 가장 강력한 연결고리입니다."<footer>독거노인종합지원센터 김현미 센터장</footer></blockquote>
+        <p style="font-size:15px" class="muted">SK하이닉스와 독거노인종합지원센터는 기억(Memory)을 통한 정서적 지지와 자기 존중감 회복을 핵심 가치로 하여, 어르신들의 삶의 이야기가 소중한 자산이 되도록 지원합니다.</p>
+        <div class="core">
+          <div><h4>기억을 품다</h4><p>구술 인터뷰와 그림일기 앱 '실버프렌드'로 어르신의 기억을 AI가 글·이미지·음성으로 기록합니다.</p></div>
+          <div><h4>이야기로 잇다</h4><p>자서전 『이야기로 잇다』 시리즈와 이 아카이브로 이야기를 엮어 세대와 세대를 연결합니다.</p></div>
+          <div><h4>기억을 나누다</h4><p>답장·낭독·방문으로 기억이 되돌아가고, 지역 공동체의 자산으로 공유됩니다.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="book">
+          <div class="vol">이천, 이야기로 잇다 · 1권</div>
+          <h3>뿌리 깊은 나무처럼</h3>
+          <div class="names">고경자 · 김재봉 · 남관순 · 신문자 · 신점임</div>
+          <p>이천에서 홀로 살아가시는 어르신 다섯 분의 첫 번째 자서전 묶음. 전쟁과 가난, 일과 가족, 그리고 지금의 하루까지를 어르신의 목소리 그대로 담았습니다.</p>
+          <p>이어지는 권에는 노명임·박춘순·홍동열 어르신을 비롯한 스물다섯 분의 이야기가 담깁니다.</p>
+          <span class="pill">독거노인종합지원센터 × 이천시노인종합복지관 × SK하이닉스</span>
+        </div>
+        <div class="book" style="margin-top:14px;background:var(--paper)">
+          <div class="vol">R.ai · 기술 파트너</div>
+          <p style="margin:0">그림일기 앱 '실버프렌드'의 구술 일기를 AI가 디지털 이미지로 아카이빙하고, AI로 기록·수집·제작된 어르신의 기억 콘텐츠가 지역 공동체의 자산이 되도록 공유하는 활동을 함께합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 기관·네트워크 -->
+<section id="network">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="no">참여 기관 · 네트워크</div><h2>함께 기록하고,<br>함께 돌려드리는 사람들.</h2></div>
+      <p>지자체·복지관·후원사가 각자의 역할로 이어져 있습니다. 새 인터뷰 참여와 자원봉사 신청은 이 페이지에서 바로 받습니다.</p>
+    </div>
+    <div class="partners">
+      <div class="partner"><div class="logo"><span>독</span>독거노인종합지원센터</div><div class="role">총괄 · 기획</div><p>프로젝트 총괄, 어르신 발굴과 동의 관리, 자서전 편집과 발간, 정서지원 연계.</p></div>
+      <div class="partner"><div class="logo"><span>이</span>이천시노인종합복지관</div><div class="role">현장 · 전달</div><p>인터뷰 진행, 생활지원사 방문, 답장 출력·낭독 전달, 지역 전시 운영.</p></div>
+      <div class="partner"><div class="logo"><span>SK</span>SK하이닉스</div><div class="role">후원 · 기술</div><p>사업 후원과 임직원 자원봉사 참여, AI 기록·아카이빙 인프라 지원 (R.ai 협력).</p></div>
+    </div>
+
+    <h3 style="margin-top:64px">기관용 통계 <span class="muted" style="font-size:14px">· 2026년 9월 첫째 주 (예시)</span></h3>
+    <div class="stats">
+      <div class="stat"><b>12,480</b><span>기억 방 관람</span></div>
+      <div class="stat"><b>1,372</b><span>접수된 답장</span></div>
+      <div class="stat"><b>911</b><span>어르신께 전달 완료</span></div>
+      <div class="stat"><b>30 / 30</b><span>기억 방 개설</span></div>
+    </div>
+    <div class="bars" id="bars"></div>
+
+    <div class="forms">
+      <div class="form">
+        <h3>새 인터뷰 참여 신청</h3>
+        <p class="desc">이천에 거주하시는 어르신 본인, 또는 어르신을 아는 보호자·생활지원사가 신청할 수 있습니다.</p>
+        <label>신청자 성함</label><input placeholder="홍길동">
+        <label>어르신과의 관계</label><select><option>본인</option><option>가족·보호자</option><option>생활지원사</option><option>이웃</option></select>
+        <label>연락처</label><input placeholder="010-0000-0000">
+        <label>간단한 소개</label><textarea rows="3" placeholder="어르신의 살아오신 이야기 중 기억에 남는 것을 한두 줄로"></textarea>
+        <div class="check"><input type="checkbox" id="c1"><label for="c1" style="margin:0">개인정보 수집·이용에 동의합니다. 인터뷰 진행 전 어르신 본인의 별도 동의를 받습니다.</label></div>
+        <button class="btn btn-indigo" style="margin-top:18px" onclick="toast('신청이 접수되었습니다. 담당자가 연락드립니다.')">신청하기</button>
+      </div>
+      <div class="form">
+        <h3>자원봉사 신청</h3>
+        <p class="desc">쌓인 답장을 어르신께 직접 읽어 드리거나, 방문·인터뷰 보조로 참여합니다.</p>
+        <label>성함</label><input placeholder="홍길동">
+        <label>참여 방식</label><select><option>답장 낭독 방문</option><option>인터뷰 보조 (녹취)</option><option>그림일기 앱 사용 도움</option><option>전시·행사 지원</option></select>
+        <label>가능 요일</label><input placeholder="예) 토요일 오전">
+        <label>소속 (선택)</label><input placeholder="예) SK하이닉스 이천캠퍼스">
+        <div class="check"><input type="checkbox" id="c2"><label for="c2" style="margin:0">방문 전 기본 교육(1시간)에 참석하겠습니다.</label></div>
+        <button class="btn btn-indigo" style="margin-top:18px" onclick="toast('자원봉사 신청이 접수되었습니다.')">신청하기</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 운영·관리 -->
+<section id="admin">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="no">운영 · 관리 (관리자 화면 미리보기)</div><h2>동의에서 게시까지,<br>한 번에.</h2></div>
+      <p>어르신·보호자 동의와 실명/가명, 게시 범위를 한 곳에서 관리하고, 답장을 검수하며, 인터뷰 원자료를 올리면 글귀·음성·그림이 자동 정리됩니다.</p>
+    </div>
+    <div class="admin-grid">
+      <div class="panel">
+        <h4>답장 검수 대기 <span>4건 · 승인 시 게시 + 전달 목록 등록</span></h4>
+        <div id="queue"></div>
+      </div>
+      <div class="panel">
+        <h4>동의 · 게시 범위 <span>실명/가명 · 범위</span></h4>
+        <div class="consent" id="consent"></div>
+      </div>
+    </div>
+    <div class="pipeline">
+      <div><b>① 원자료 업로드</b><p>녹취 음성, 실버프렌드 구술일기, 사진</p></div>
+      <div><b>② 자동 전사·분절</b><p>음성 → 문단 단위 글귀, 타임코드 연동</p></div>
+      <div><b>③ 한 문장 추출</b><p>방의 얼굴이 될 문장 후보 3개, 편집자가 선택</p></div>
+      <div><b>④ 그림일기 생성</b><p>R.ai로 구술 → 이미지, 어르신 확인 후 확정</p></div>
+      <div><b>⑤ 연·장소·주제 태깅</b><p>검수 후 기억 방 게시, 통계에 반영</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="brand"><span class="seal">잇</span>이천, 이야기로 잇다</div>
+      <div>AI 메모리 케어 프로젝트 · 이천 실버 라이프 아카이브</div>
+      <div class="small muted" style="margin-top:6px">독거노인종합지원센터 × 이천시노인종합복지관 × SK하이닉스 · 기술 R.ai</div>
+    </div>
+    <div class="small muted" style="max-width:36ch">어르신의 이야기는 본인과 보호자의 동의를 받아 게시됩니다. 게시 중단을 원하시면 언제든 센터로 연락 주세요.</div>
+  </div>
+</footer>
+
+<!-- 기억 방 모달 -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="기억 방">
+  <div class="bg" onclick="closeRoom()"></div>
+  <div class="room">
+    <button class="close" onclick="closeRoom()" aria-label="닫기">✕</button>
+    <div class="room-in" id="roomIn"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="seal">잇</span><span id="toastMsg"></span></div>
+
+<script>
+// ---------- 데이터 (자서전 원문 업로드 후 교체) ----------
+const PLACES=['이천 읍내','장호원','신둔','백사','부발','타지(서울·강원)'];
+const TOPICS=['전쟁','일','가족','음식','첫사랑','고향','살림'];
+const EMOS=['그리움','기쁨','슬픔','자부심'];
+const NAMED=['고경자','김재봉','남관순','신문자','신점임','노명임','박춘순','홍동열'];
+const ALIAS=['봄이 할머니','은행나무집','재봉틀 할머니','들깨 할아버지','수원댁','장호원 아저씨','미나리 할머니','새벽장','솔밭집','앞산댁','쌀집 할아버지','옥수수 할머니','읍내 이발소','문자 할머니','복숭아밭','강아지 할머니','뜨개질 할머니','노래 할아버지','다리 밑집','한지 할머니','도자기 할아버지','감나무집'];
+// 샘플 문장: 실제 자서전이 올라오면 '한 문장'으로 교체
+const S=[
+ ['피난길에 어머니가 내 손을 놓지 않으셨다. 그 손힘을 아직도 기억한다.',1951,'타지(서울·강원)','전쟁','슬픔'],
+ ['쌀 한 되가 그렇게 무거운 줄 그때 처음 알았다.',1958,'장호원','살림','자부심'],
+ ['재봉틀 소리가 우리 집 자장가였다.',1965,'이천 읍내','일','그리움'],
+ ['첫 월급으로 아버지 고무신을 샀다. 아버지는 아무 말도 안 하셨다.',1968,'이천 읍내','일','기쁨'],
+ ['논두렁에서 먹던 새참 국수보다 맛있는 건 없었다.',1962,'백사','음식','기쁨'],
+ ['그 사람은 편지를 잘 썼다. 나는 답을 못 썼다.',1960,'신둔','첫사랑','그리움'],
+ ['애 셋을 업고 장에 나갔다 오면 해가 져 있었다.',1974,'부발','가족','자부심'],
+ ['도자기 흙은 손이 기억한다. 눈 감고도 빚는다.',1981,'신둔','일','자부심'],
+ ['남편이 떠나고 처음 혼자 밥을 지은 날, 밥이 너무 많았다.',1999,'이천 읍내','가족','슬픔'],
+ ['복숭아꽃 필 때면 시집오던 날 생각이 난다.',1959,'장호원','고향','그리움'],
+ ['전쟁 통에도 학교는 갔다. 책이 없어 노래로 배웠다.',1952,'타지(서울·강원)','전쟁','자부심'],
+ ['김장하는 날은 온 동네가 우리 마당이었다.',1978,'백사','음식','기쁨'],
+ ['손주가 전화하면 아무 일 없어도 좋다.',2019,'이천 읍내','가족','기쁨'],
+ ['내가 심은 은행나무가 이제 나보다 크다.',2005,'부발','고향','자부심'],
+ ['배고픈 건 참아도 추운 건 못 참았다.',1955,'신둔','살림','슬픔'],
+ ['라디오에서 노래가 나오면 다 따라 불렀다. 지금도 그런다.',1970,'이천 읍내','일','기쁨'],
+ ['고향집은 없어졌는데 우물 자리는 안다.',1990,'백사','고향','그리움'],
+ ['시어머니가 준 놋그릇을 아직 쓴다.',1963,'장호원','살림','그리움'],
+ ['보리밥에 된장만 있어도 배부르던 시절이다.',1957,'부발','음식','그리움'],
+ ['아들 군대 보내던 날, 버스가 안 보일 때까지 서 있었다.',1985,'이천 읍내','가족','슬픔'],
+ ['겨울에 언 손으로 한지를 떴다. 손이 다 텄다.',1966,'신둔','일','자부심'],
+ ['그 애 이름은 지금도 안 잊는다. 말은 안 하겠다.',1961,'백사','첫사랑','그리움'],
+ ['처음 전기 들어오던 밤, 온 식구가 전구만 쳐다봤다.',1972,'장호원','살림','기쁨'],
+ ['피난 가다 잃어버린 동생을 아직 찾는다.',1951,'타지(서울·강원)','전쟁','슬픔'],
+ ['막내딸 시집보내고 집이 너무 조용했다.',1996,'부발','가족','슬픔'],
+ ['장날이면 삶은 옥수수 한 자루 들고 나갔다.',1983,'이천 읍내','일','자부심'],
+ ['이천 쌀밥은 그냥 먹어도 반찬이다.',2010,'백사','음식','기쁨'],
+ ['가난했지만 부끄럽진 않았다.',1969,'신둔','살림','자부심'],
+ ['늙어도 아침마다 앞산은 본다.',2022,'장호원','고향','그리움'],
+ ['새벽 네 시에 일어나는 건 몸이 먼저 안다.',2015,'부발','일','자부심'],
+];
+const ELDERS=[];
+for(let i=0;i<30;i++){
+  const name=i<NAMED.length?NAMED[i]:ALIAS[i-NAMED.length];
+  const born=1932+Math.floor(i*1.1)%20; // 1932~1951
+  const s=S[i];
+  ELDERS.push({id:i,name,alias:i>=NAMED.length,born,sentence:s[0],year:s[1],place:s[2],topic:s[3],emo:s[4],
+    voice:i%3!==2,seen:false,
+    passages:[
+      s[0],
+      '그때는 다들 그렇게 살았다. 잘 살고 못 살고가 아니라 그냥 사는 거였다. (자서전 본문 발췌 자리 — 원문 업로드 후 교체)',
+      '지금 생각하면 그게 다 복이었다. 아이들 얼굴 보고, 밥 먹이고, 아침이 오고. (자서전 본문 발췌 자리)',
+      '내 이야기를 누가 듣겠나 했는데, 이렇게 적어 준다니 고맙다.'
+    ],
+    extras:[S[(i+7)%30][0],S[(i+13)%30][0]]
+  });
+}
+const LETTERS=[
+ {to:0,text:'할머니, 저도 어릴 때 할머니 손 잡고 시장 가던 게 제일 기억나요. 오래오래 건강하세요.',from:'이천고 2학년 서연',st:'arrived',type:'text'},
+ {to:0,text:'',from:'SK하이닉스 임직원 김민수',st:'read',type:'voice'},
+ {to:0,text:'',from:'초등 3학년 하람',st:'arrived',type:'draw'},
+ {to:0,text:'피난길 이야기를 읽고 한참을 앉아 있었어요. 기억해 주셔서 감사합니다.',from:'수원에서 온 관람객',st:'pending',type:'text'},
+ {to:0,text:'우리 할머니도 같은 해에 피난을 가셨대요. 두 분이 어디선가 스쳤을지도 모르겠네요.',from:'대학생 준호',st:'arrived',type:'text'},
+ {to:0,text:'그 손힘, 저도 기억해 보려고요. 엄마 손을 오늘 한번 잡아봤습니다.',from:'익명',st:'read',type:'text'},
+];
+const VISITOR_ANS=['군대 첫 휴가 때 엄마가 끓여준 미역국','시험 끝나고 친구들이랑 먹은 떡볶이','할머니가 해주신 김치찌개'];
+const ELDER_ANS=[['보리밥에 고추장 비벼 먹던 밥','신점임'],['피난길에 얻어먹은 주먹밥 한 덩이','고경자'],['첫 월급날 식구들이랑 먹은 고기','김재봉']];
+
+// ---------- 유틸 ----------
+const $=s=>document.querySelector(s);
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function toast(m){$('#toastMsg').textContent=m;$('#toast').classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>$('#toast').classList.remove('show'),2600)}
+function who(e){return e.alias?`${e.name} <span class="muted">(가명)</span>`:`${e.name} 어르신`}
+function age(e,y){return y-e.born}
+
+// ---------- 히어로: 문장 흩뿌리기 ----------
+function buildField(){
+  const f=$('#field');const W=f.clientWidth,H=f.clientHeight;
+  const mobile=innerWidth<860;
+  f.innerHTML='';
+  let cols,rows,n;
+  if(mobile){cols=2;rows=7;n=cols*rows}
+  else{cols=Math.max(2,Math.min(5,Math.floor((W-24)/215)));rows=Math.max(3,Math.floor((H-70)/112));n=Math.min(ELDERS.length,cols*rows)}
+  const list=[...ELDERS].sort(()=>Math.random()-.5).slice(0,n);
+  const cw=(W-24)/cols, rh=(H-70)/rows;
+  list.forEach((e,i)=>{
+    const b=document.createElement('button');b.className='sent';b.dataset.emo=e.emo;
+    b.style.width=(cw-16)+'px';b.style.maxWidth='none';
+    b.innerHTML=`${e.sentence}<span class="who"><b>${e.name}</b> · ${e.year}</span>`;
+    const c=i%cols,r=Math.floor(i/cols);
+    const x=12+c*cw+rnd(0,8), y=16+r*rh+rnd(-4,6);
+    b.style.left=x+'px';b.style.top=y+'px';b.style.transform=`rotate(${rnd(-2,2)}deg)`;
+    b.style.animation=`drift ${rnd(9,15)}s ease-in-out ${rnd(-10,0)}s infinite alternate`;
+    b.onclick=()=>openRoom(e.id);
+    f.appendChild(b);
+  });
+  $('#heroCount').textContent=`${n}개의 문장 · 30개의 기억 방`;
+}
+const st=document.createElement('style');st.textContent='@keyframes drift{from{margin-top:0}to{margin-top:14px}}';document.head.appendChild(st);
+
+// ---------- 오늘의 기억 ----------
+let todayId=null;
+function pickToday(force){
+  const key='today-'+new Date().toDateString();
+  let id=sessionStorage.getItem(key);
+  if(force||id===null){id=Math.floor(Math.random()*ELDERS.length);sessionStorage.setItem(key,id)}
+  todayId=+id;const e=ELDERS[todayId];
+  $('#todayQuote').textContent=e.sentence;
+  $('#todayMeta').innerHTML=`${who(e)} · ${e.year}년, ${e.place} · ${e.topic}`;
+  $('#todayDate').textContent=new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
+}
+$('#todayOpen').onclick=()=>openRoom(todayId);
+
+// ---------- 아카이브 필터 ----------
+const F={year:null,place:null,topic:null,emo:null};
+function buildFilters(){
+  const map={place:PLACES,topic:TOPICS,emo:EMOS};
+  document.querySelectorAll('.fgroup').forEach(g=>{
+    const k=g.dataset.key;
+    map[k].forEach(v=>{const b=document.createElement('button');b.className='chip';b.textContent=v;
+      b.onclick=()=>{F[k]=F[k]===v?null:v;render()};g.appendChild(b)});
+  });
+  const tl=$('#timeline');
+  for(let y=1930;y<=2020;y+=10){const t=document.createElement('button');t.className='tick';t.style.left=((y-1930)/90*100)+'%';
+    t.innerHTML=`${y}<i></i><b></b>`;t.onclick=()=>{F.year=F.year===y?null:y;render()};tl.appendChild(t)}
+  $('#clearF').onclick=()=>{Object.keys(F).forEach(k=>F[k]=null);render()};
+}
+function render(){
+  document.querySelectorAll('.fgroup').forEach(g=>{const k=g.dataset.key;g.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',F[k]===c.textContent))});
+  document.querySelectorAll('.tick').forEach(t=>t.classList.toggle('on',F.year===+t.textContent));
+  const list=ELDERS.filter(e=>(!F.year||Math.floor(e.year/10)*10===F.year)&&(!F.place||e.place===F.place)&&(!F.topic||e.topic===F.topic)&&(!F.emo||e.emo===F.emo));
+  const g=$('#grid');
+  if(!list.length){g.innerHTML='<div class="empty" style="grid-column:1/-1">이 조건에 맞는 기억이 아직 없습니다. 조건을 하나 풀어 보세요.</div>';return}
+  g.innerHTML=list.map(e=>`<button class="mcard ${e.seen?'seen':''}" onclick="openRoom(${e.id})">
+    <span class="stamp">${e.name[0]}</span>
+    <q>${e.sentence}</q>
+    <span class="foot"><span><b>${e.name}</b> · ${e.year} · ${e.place}</span>${e.voice?'<span class="voice"><i></i><i></i><i></i></span>':''}</span></button>`).join('');
+}
+
+// ---------- 기억 방 ----------
+let playT=null;
+function openRoom(id){
+  const e=ELDERS[id];
+  if(!e.seen){e.seen=true;updateStamps();toast(`${e.name} 도장을 얻었어요`)}
+  render();
+  const tags=[e.year+'년',e.place,e.topic,e.emo];
+  $('#roomIn').innerHTML=`
+    <div class="who"><div class="avatar">${e.name[0]}</div><div><h3>${who(e)}</h3><div class="sub">${e.born}년생 · ${e.alias?'가명 게시':'실명 게시'} · 공개 범위: 전체</div></div></div>
+    <div class="big">"${e.sentence}"</div>
+    <div class="room-cols">
+      <div>
+        ${e.voice?`<div class="player"><button class="play" id="playBtn" aria-label="재생">▶</button><div class="bar"><i id="pbar"></i></div><span class="t" id="ptime">0:00 / 2:14</span></div>`:`<div class="player" style="color:var(--ink-3);font-size:13px">이 방의 음성은 어르신 요청으로 공개하지 않습니다.</div>`}
+        <div class="passage" id="passage">${e.passages.map(p=>`<p>${p}</p>`).join('')}</div>
+        <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <div class="reply-form">
+          <h4>${e.name} 어르신께 답장 쓰기</h4>
+          <div class="note">승인 후 게시되며, 복지관에서 출력·낭독으로 전달합니다.</div>
+          <div class="modes"><button class="chip on" onclick="mode(this,'text')">글</button><button class="chip" onclick="mode(this,'voice')">음성</button><button class="chip" onclick="mode(this,'draw')">그림</button></div>
+          <div id="modeBox"><textarea id="letterText" placeholder="읽고 떠오른 마음을 그대로 적어 주세요."></textarea></div>
+          <div class="row"><input id="letterFrom" style="max-width:220px" placeholder="별명 (예: 이천고 2학년 서연)"><button class="btn btn-ink" onclick="sendLetter(${e.id})">답장 보내기</button></div>
+        </div>
+      </div>
+      <div>
+        <div class="diary">
+          <div class="pic"><svg viewBox="0 0 200 200" fill="none" stroke="#274C77" stroke-width="1.6" stroke-linecap="round"><path d="M30 150 Q80 90 120 140 T180 120"/><path d="M50 150 v-45 q0-8 8-8 h34 q8 0 8 8 v45"/><rect x="66" y="122" width="16" height="28"/><circle cx="150" cy="55" r="16"/><path d="M20 165 h160"/><path d="M100 140 q15-25 45-15"/><path d="M60 95 l16-18 l16 18"/></svg></div>
+          <div class="cap"><b>AI 그림일기 · 실버프렌드</b>${e.year}년 ${e.place}의 기억을 어르신 구술로 그린 그림. 어르신 확인 후 게시.</div>
+        </div>
+        <div class="side-box"><h4>이 방의 다른 문장</h4><ul>${e.extras.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+        <div class="side-box"><h4>비슷한 시절의 기억</h4><ul>${ELDERS.filter(x=>x.id!==e.id&&Math.abs(x.year-e.year)<=6).slice(0,3).map(x=>`<li onclick="openRoom(${x.id})">${x.sentence}<br><small class="muted">${x.name} · ${x.year}</small></li>`).join('')||'<li class="muted">아직 없습니다</li>'}</ul></div>
+        <div class="side-box"><h4>쌓인 답장</h4><ul><li onclick="showWall(${e.id})">${LETTERS.filter(l=>l.to===e.id).length}통의 편지 보기 →</li></ul></div>
+      </div>
+    </div>`;
+  $('#modal').classList.add('open');document.body.style.overflow='hidden';
+  $('.room').scrollTop=0;
+  if(e.voice){$('#playBtn').onclick=togglePlay}
+}
+function closeRoom(){$('#modal').classList.remove('open');document.body.style.overflow='';stopPlay()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRoom()});
+function openRandom(){openRoom(Math.floor(Math.random()*ELDERS.length))}
+// 음성-글귀 연동 재생 (데모: 문단 순서대로 하이라이트)
+let pos=0;
+function togglePlay(){if(playT){stopPlay();return}
+  const ps=[...$('#passage').querySelectorAll('p')];const total=134;$('#playBtn').textContent='❚❚';
+  playT=setInterval(()=>{pos++;const pct=pos/total;$('#pbar').style.width=(pct*100)+'%';
+    $('#ptime').textContent=`${Math.floor(pos/60)}:${String(pos%60).padStart(2,'0')} / 2:14`;
+    const idx=Math.min(ps.length-1,Math.floor(pct*ps.length));ps.forEach((p,i)=>p.classList.toggle('playing',i===idx));
+    if(pos>=total)stopPlay()},1000)}
+function stopPlay(){clearInterval(playT);playT=null;pos=0;const b=$('#playBtn');if(b){b.textContent='▶';$('#pbar').style.width='0';$('#ptime').textContent='0:00 / 2:14'}document.querySelectorAll('.passage p').forEach(p=>p.classList.remove('playing'))}
+let curMode='text';
+function mode(btn,m){curMode=m;btn.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===btn));
+  $('#modeBox').innerHTML=m==='text'?'<textarea id="letterText" placeholder="읽고 떠오른 마음을 그대로 적어 주세요."></textarea>'
+  :m==='voice'?'<div style="padding:22px;text-align:center;border:1px dashed rgba(28,36,49,.25);border-radius:4px"><button class="btn btn-line" onclick="toast(\'녹음은 실제 배포 시 활성화됩니다\')">● 녹음 시작</button><div class="note" style="margin-top:8px">최대 2분 · 어르신께 그대로 들려드립니다</div></div>'
+  :'<div style="padding:22px;text-align:center;border:1px dashed rgba(28,36,49,.25);border-radius:4px"><button class="btn btn-line" onclick="toast(\'파일 첨부는 실제 배포 시 활성화됩니다\')">그림 파일 올리기</button><div class="note" style="margin-top:8px">JPG·PNG · 출력해서 전달해 드립니다</div></div>'}
+function sendLetter(id){
+  const t=curMode==='text'?($('#letterText').value||'').trim():'';
+  if(curMode==='text'&&!t){toast('답장 내용을 적어 주세요');return}
+  LETTERS.push({to:id,text:t,from:($('#letterFrom').value||'익명').trim()||'익명',st:'pending',type:curMode});
+  const e=ELDERS[id];toast(`답장을 보냈어요. 검수 후 ${e.name} 어르신께 전달됩니다.`);
+  if($('#letterText'))$('#letterText').value='';showWall(id);renderQueue();
+}
+const ST={pending:['pending','검수 중'],read:['read','게시됨 · 전달 준비'],arrived:['arrived','답장이 도착했어요']};
+function showWall(id){const e=ELDERS[id];$('#wallWho').textContent=`${e.name} 어르신께 쌓인 편지`;
+  const ls=LETTERS.filter(l=>l.to===id);
+  $('#wall').innerHTML=ls.length?ls.map((l,i)=>`<div class="letter ${l.type}" style="--r:${(i%5-2)*0.8}deg">${l.type==='voice'?'<div class="mini">▶ 음성 답장 0:48</div>':l.type==='draw'?'<div class="mini">그림 답장</div>':''}${l.text}<div class="from"><span>${l.from}</span><span class="badge ${ST[l.st][0]}">${ST[l.st][1]}</span></div></div>`).join('')
+  :'<div class="empty" style="grid-column:1/-1">아직 편지가 없습니다. 첫 답장을 남겨 주세요.</div>';
+  if($('#modal').classList.contains('open')){closeRoom();location.hash='#reply'}
+}
+
+// ---------- 재미 요소 ----------
+async function linkMemory(){
+  const v=$('#linkIn').value.trim(); if(!v){toast('한 문장을 적어 주세요');return}
+  const btn=$('#linkBtn'); btn.disabled=true; btn.textContent='잇는 중…';
+  try{
+    const r=await fetch('/api/link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:v,from:$('#linkFrom').value})});
+    const d=await r.json();
+    if(!r.ok){toast(d.error||'잠시 후 다시 시도해 주세요');return}
+    const st=d.story, e=st.elder;
+    $('#linkOut').innerHTML=`<div>${esc(st.text)}</div><div class="arrow">↓ ${st.topic?st.topic+'의 기억으로':'비슷한 시절로'} 이어집니다</div><div style="cursor:pointer" onclick="openRoom(${e.id})">"${esc(e.sentence)}"<br><small class="muted" style="font-family:var(--sans)">${esc(e.name)} · ${e.year} · 눌러서 방으로</small></div>`;
+    toast('기억이 이어졌어요'); $('#linkIn').value=''; loadLinkWall();
+  }catch(err){
+    toast('서버에 연결하지 못했어요. 배포된 주소에서 다시 시도해 주세요');
+  }finally{btn.disabled=false;btn.textContent='잇기'}
+}
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+async function loadLinkWall(){
+  try{
+    const r=await fetch('/api/link?n=24'); if(!r.ok) throw 0; const d=await r.json();
+    $('#linkCount').textContent=d.total?`· ${d.total}개`:'';
+    $('#linkStatus').textContent=d.persistent?'':'※ 저장소가 연결되지 않아 남긴 문장은 서버 재시작 시 사라집니다. Vercel에서 Upstash Redis를 연결하면 영구 저장됩니다.';
+    $('#linkWall').innerHTML=d.stories.length?d.stories.map(st=>`<div class="lk"><div class="me">${esc(st.text)}</div><div class="to" onclick="openRoom(${st.elder.id})">"${esc(st.elder.sentence)}"</div><div class="meta">${esc(st.from)} → ${esc(st.elder.name)} · ${st.elder.year}${st.topic?' · '+st.topic:''}</div></div>`).join('')
+      :'<div class="empty" style="grid-column:1/-1">아직 이어진 이야기가 없습니다. 첫 문장을 남겨 주세요.</div>';
+  }catch(e){
+    $('#linkWall').innerHTML='<div class="empty" style="grid-column:1/-1">기억 잇기 서버에 연결되지 않았습니다. GitHub → Vercel로 배포하면 이 벽이 살아납니다.</div>';
+  }
+}
+function ageMap(){const a=+$('#ageIn').value;if(!a){return}
+  const out=ELDERS.map(e=>({e,y:e.born+a})).filter(x=>x.y<=2026).sort(()=>Math.random()-.5).slice(0,4);
+  $('#ageOut').innerHTML=out.map(({e,y})=>{const near=ELDERS.reduce((b,c)=>Math.abs(c.year-y)<Math.abs(b.year-y)?c:b);
+    return `<div class="age-item" onclick="openRoom(${e.id})"><div class="yr">${y}년</div><div><q>${Math.abs(near.year-y)<=4?near.sentence:e.sentence}</q><small>${e.name} 어르신이 ${a}살이던 해</small></div></div>`}).join('')}
+function updateStamps(){const n=ELDERS.filter(e=>e.seen).length;$('#stampN').textContent=n;
+  $('#stamps').innerHTML=ELDERS.map(e=>`<div class="stampc ${e.seen?'got':''}" title="${e.name}">${e.seen?e.name.slice(0,2):'·'}</div>`).join('')}
+function renderMonth(){$('#monthElders').innerHTML=ELDER_ANS.map(a=>`<div class="a">${a[0]}<br><small class="muted" style="font-family:var(--sans)">${a[1]}</small></div>`).join('');
+  $('#monthVisitors').innerHTML=VISITOR_ANS.map(a=>`<div class="a">${a}</div>`).join('')}
+$('#monthIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.value.trim()){VISITOR_ANS.unshift(e.target.value.trim());e.target.value='';renderMonth();toast('이달의 질문에 답을 남겼어요')}});
+
+// ---------- 통계 · 관리자 ----------
+function renderBars(){const rows=[['고경자',214],['신점임',188],['김재봉',161],['남관순',140],['신문자',122]];
+  $('#bars').innerHTML='<div class="small muted" style="margin-bottom:10px">어르신별 답장 수 (상위 5)</div>'+rows.map(r=>`<div class="bar-row"><span>${r[0]}</span><div class="b"><i style="width:${r[1]/214*100}%"></i></div><span>${r[1]}</span></div>`).join('')}
+function renderQueue(){const q=LETTERS.filter(l=>l.st==='pending');
+  $('#queue').innerHTML=q.length?q.map((l,i)=>`<div class="qitem"><div><q>${l.type==='text'?l.text:l.type==='voice'?'[음성 답장]':'[그림 답장]'}</q><small>${l.from} → ${ELDERS[l.to].name} 어르신</small></div><div class="acts"><button class="ok" onclick="decide(${LETTERS.indexOf(l)},'read')">승인</button><button onclick="decide(${LETTERS.indexOf(l)},'blocked')">차단</button></div></div>`).join('')
+  :'<div class="small" style="color:rgba(241,237,228,.55);padding:12px 0">검수 대기 중인 답장이 없습니다.</div>';
+  $('#queue').previousElementSibling.querySelector('span').textContent=`${q.length}건 · 승인 시 게시 + 전달 목록 등록`}
+function decide(i,s){LETTERS[i].st=s;if(s==='blocked')LETTERS.splice(i,1);renderQueue();toast(s==='read'?'승인했어요. 전달 목록에 올랐습니다.':'차단했어요');showWallSilent()}
+function showWallSilent(){const id=ELDERS.find(e=>$('#wallWho').textContent.startsWith(e.name))?.id??0;const ls=LETTERS.filter(l=>l.to===id);
+  $('#wall').innerHTML=ls.map((l,i)=>`<div class="letter ${l.type}" style="--r:${(i%5-2)*0.8}deg">${l.type==='voice'?'<div class="mini">▶ 음성 답장 0:48</div>':l.type==='draw'?'<div class="mini">그림 답장</div>':''}${l.text}<div class="from"><span>${l.from}</span><span class="badge ${ST[l.st][0]}">${ST[l.st][1]}</span></div></div>`).join('')}
+function renderConsent(){const rows=[['고경자','실명',true,'전체'],['김재봉','실명',true,'전체'],['남관순','실명',true,'전체'],['노명임','실명',false,'기관 내'],['박춘순','가명',true,'전체'],['홍동열','실명',true,'전체']];
+  $('#consent').innerHTML=rows.map(r=>`<div><span>${r[0]}</span><span class="sw">${r[1]}</span><span class="sw ${r[2]?'on':''}">음성 ${r[2]?'공개':'비공개'}</span><span class="sw">${r[3]}</span></div>`).join('')}
+
+// ---------- init ----------
+buildField();pickToday(false);buildFilters();render();showWall(0);updateStamps();renderMonth();renderBars();renderQueue();renderConsent();loadLinkWall();
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(buildField,200)});
+$('.menu-btn').onclick=()=>location.hash='#archive';
+</script>
+</body>
+</html>
